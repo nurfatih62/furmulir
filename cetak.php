@@ -9,7 +9,8 @@ $s = $res[0];
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Cetak Formulir - <?= $s['nama_lengkap'] ?></title>
+    <title>Cetak Formulir - <?= htmlspecialchars($s['nama_lengkap']) ?></title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         /* Pengaturan Kertas A4 */
         @page {
@@ -17,26 +18,28 @@ $s = $res[0];
             margin: 1cm; /* Margin diperkecil agar muat */
         }
         body {
-            font-family: Arial, sans-serif;
-            font-size: 10pt; /* Font diperkecil dari 12pt ke 10pt */
+            font-family: 'Arial', sans-serif; /* Arial untuk cetak resmi */
+            font-size: 10pt; 
             line-height: 1.3;
             margin: 0;
             padding: 0;
+            color: #000;
         }
         .kop {
             text-align: center;
-            border-bottom: 2px solid #000;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
+            border-bottom: 3px double #000;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
         }
-        .kop h2 { margin: 0; font-size: 14pt; }
-        .kop p { margin: 0; font-size: 9pt; }
+        .kop h2 { margin: 0; font-size: 14pt; font-family: 'Times New Roman', serif; }
+        .kop p { margin: 0; font-size: 10pt; }
         
         h3 { 
             text-align: center; 
             text-decoration: underline; 
-            margin: 10px 0; 
+            margin: 15px 0; 
             font-size: 12pt; 
+            font-weight: bold;
         }
 
         table {
@@ -44,7 +47,7 @@ $s = $res[0];
             border-collapse: collapse;
         }
         td {
-            padding: 3px 0; /* Jarak antar baris dipersempit */
+            padding: 4px 0; 
             vertical-align: top;
         }
         .label { width: 35%; }
@@ -52,29 +55,64 @@ $s = $res[0];
         
         .section-title {
             font-weight: bold;
-            margin-top: 8px;
+            margin-top: 10px;
             text-transform: uppercase;
             font-size: 10pt;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #aaa;
+            padding-bottom: 2px;
         }
 
         .footer {
-            margin-top: 20px;
+            margin-top: 30px;
             width: 100%;
         }
         .footer td { text-align: center; width: 50%; }
 
-        /* Sembunyikan tombol saat cetak */
+        /* Sembunyikan tombol saat cetak dan ubah tampilan layar */
+        .screen-only {
+            background: #f4f9f4; 
+            padding: 15px; 
+            text-align: center; 
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            font-family: 'Poppins', sans-serif;
+        }
+        .btn-print {
+            background: linear-gradient(135deg, #198754, #126c42);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            margin: 0 5px;
+        }
+        .btn-back {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            margin: 0 5px;
+        }
         @media print {
-            .no-print { display: none; }
+            .no-print { display: none !important; }
+            body { font-size: 11pt; }
         }
     </style>
 </head>
-<body onload="window.print()">
+<body>
 
-    <div class="no-print" style="background: #f0f0f0; padding: 10px; text-align: center; margin-bottom: 20px;">
-        <button onclick="window.print()" style="padding: 10px 20px; cursor: pointer;">KLIK UNTUK CETAK</button>
-        <button onclick="window.history.back()" style="padding: 10px 20px; cursor: pointer;">KEMBALI</button>
+    <div class="screen-only no-print">
+        <h4 style="margin: 0 0 10px 0;">Tampilan Cetak Formulir</h4>
+        <button onclick="window.print()" class="btn-print">🖨️ KLIK UNTUK CETAK</button>
+        <button onclick="window.close()" class="btn-back">TUTUP HALAMAN</button>
     </div>
 
     <div class="kop">
@@ -89,68 +127,68 @@ $s = $res[0];
         <tr>
             <td class="label">1. Nama Lengkap</td>
             <td class="titik">:</td>
-            <td><strong><?= strtoupper($s['nama_lengkap']) ?></strong></td>
+            <td><strong><?= strtoupper(htmlspecialchars($s['nama_lengkap'])) ?></strong></td>
         </tr>
         <tr>
             <td class="label">2. Nama Panggilan</td>
             <td class="titik">:</td>
-            <td><?= $s['nama_panggilan'] ?></td>
+            <td><?= htmlspecialchars($s['nama_panggilan']) ?></td>
         </tr>
         <tr>
             <td class="label">3. Jenis Kelamin</td>
             <td class="titik">:</td>
-            <td><?= $s['jenis_kelamin'] ?></td>
+            <td><?= htmlspecialchars($s['jenis_kelamin']) ?></td>
         </tr>
         <tr>
             <td class="label">4. Tempat, Tanggal Lahir</td>
             <td class="titik">:</td>
-            <td><?= $s['tempat_lahir'] ?>, <?= date('d-m-Y', strtotime($s['tanggal_lahir'])) ?></td>
+            <td><?= htmlspecialchars($s['tempat_lahir']) ?>, <?= date('d-m-Y', strtotime($s['tanggal_lahir'])) ?></td>
         </tr>
         <tr>
             <td class="label">5. Anak Ke -</td>
             <td class="titik">:</td>
-            <td><?= $s['anak_ke'] ?></td>
+            <td><?= htmlspecialchars($s['anak_ke']) ?></td>
         </tr>
         <tr>
             <td class="label">6. Jumlah Saudara Kandung</td>
             <td class="titik">:</td>
-            <td><?= $s['jumlah_saudara'] ?> orang</td>
+            <td><?= htmlspecialchars($s['jumlah_saudara']) ?> orang</td>
         </tr>
 
         <tr><td colspan="3" class="section-title">Data Orang Tua</td></tr>
         <tr>
             <td class="label">7. Nama Ayah / Ibu</td>
             <td class="titik">:</td>
-            <td><?= $s['nama_ayah'] ?> / <?= $s['nama_ibu'] ?></td>
+            <td><?= htmlspecialchars($s['nama_ayah']) ?> / <?= htmlspecialchars($s['nama_ibu']) ?></td>
         </tr>
         <tr>
             <td class="label">8. Pekerjaan Ayah / Ibu</td>
             <td class="titik">:</td>
-            <td><?= $s['pekerjaan_ayah'] ?> / <?= $s['pekerjaan_ibu'] ?></td>
+            <td><?= htmlspecialchars($s['pekerjaan_ayah']) ?> / <?= htmlspecialchars($s['pekerjaan_ibu']) ?></td>
         </tr>
 
         <tr><td colspan="3" class="section-title">Alamat & Kontak</td></tr>
         <tr>
             <td class="label">9. Alamat Lengkap</td>
             <td class="titik">:</td>
-            <td><?= $s['alamat_jalan'] ?></td>
+            <td><?= htmlspecialchars($s['alamat_jalan']) ?></td>
         </tr>
         <tr>
             <td class="label">&nbsp;&nbsp;&nbsp;No. Telp / WA</td>
             <td class="titik">:</td>
-            <td><?= $s['no_telp'] ?></td>
+            <td><?= htmlspecialchars($s['no_telp']) ?></td>
         </tr>
 
         <tr><td colspan="3" class="section-title">Data Sekolah</td></tr>
         <tr>
             <td class="label">10. Nama Sekolah / Kelas</td>
             <td class="titik">:</td>
-            <td><?= $s['nama_sekolah'] ?> / Kelas: <?= $s['kelas'] ?></td>
+            <td><?= htmlspecialchars($s['nama_sekolah']) ?> / Kelas: <?= htmlspecialchars($s['kelas']) ?></td>
         </tr>
         <tr>
             <td class="label">&nbsp;&nbsp;&nbsp;Alamat Sekolah</td>
             <td class="titik">:</td>
-            <td><?= $s['alamat_sekolah'] ?></td>
+            <td><?= htmlspecialchars($s['alamat_sekolah']) ?></td>
         </tr>
 
         <tr><td colspan="3" class="section-title">11. Rincian Biaya</td></tr>
@@ -158,12 +196,12 @@ $s = $res[0];
             <td colspan="3">
                 <table style="margin-left: 10px; width: 95%;">
                     <tr>
-                        <td width="50%">a. Pendaftaran: Rp <?= number_format($s['biaya_pendaftaran'], 0, ',', '.') ?></td>
-                        <td>c. Uang Makan: Rp <?= number_format($s['biaya_makan'], 0, ',', '.') ?></td>
+                        <td width="50%">a. Pendaftaran: Rp <?= number_format((float)$s['biaya_pendaftaran'], 0, ',', '.') ?></td>
+                        <td>c. Uang Makan: Rp <?= number_format((float)$s['biaya_makan'], 0, ',', '.') ?></td>
                     </tr>
                     <tr>
-                        <td>b. Infaq Bulanan: Rp <?= number_format($s['biaya_infaq'], 0, ',', '.') ?></td>
-                        <td>d. Titip Jajan: Rp <?= number_format($s['biaya_jajan'], 0, ',', '.') ?></td>
+                        <td>b. Infaq Bulanan: Rp <?= number_format((float)$s['biaya_infaq'], 0, ',', '.') ?></td>
+                        <td>d. Titip Jajan: Rp <?= number_format((float)$s['biaya_jajan'], 0, ',', '.') ?></td>
                     </tr>
                 </table>
             </td>
@@ -183,8 +221,8 @@ $s = $res[0];
         </tr>
     </table>
 
-    <div style="margin-top: 15px; font-size: 8pt; color: #666; font-style: italic;">
-        * No. Pendaftaran: <?= $s['no_pendaftaran'] ?> | Dicetak pada: <?= date('d/m/Y H:i') ?>
+    <div style="margin-top: 20px; font-size: 9pt; color: #555; font-style: italic; border-top: 1px dashed #ccc; padding-top: 5px;">
+        * No. Pendaftaran: <strong><?= htmlspecialchars($s['no_pendaftaran']) ?></strong> | Dicetak pada: <?= date('d/m/Y H:i') ?>
     </div>
 
 </body>
