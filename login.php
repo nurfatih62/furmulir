@@ -1,4 +1,20 @@
-<?php include 'config.php'; ?>
+<?php 
+include 'config.php';
+
+$error = '';
+if(isset($_POST['login'])){
+    $nama = urlencode($_POST['nama_lengkap']);
+    $pass = $_POST['pass'];
+    $res = api_request("GET", $url . "?nama_lengkap=eq." . $nama . "&password=eq." . $pass);
+    if(!empty($res)){
+        $_SESSION['user'] = $res[0];
+        header("Location: dashboard.php");
+        exit;
+    } else {
+        $error = "Nama atau Password Salah! Perhatikan huruf kapital dan spasi.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -29,7 +45,6 @@
             transform: translateY(-5px);
         }
         .login-header {
-            background: #198754;
             background: linear-gradient(135deg, #198754, #126c42);
             color: white;
             padding: 30px 20px;
@@ -98,22 +113,13 @@
                 </div>
                 <button name="login" class="btn btn-primary btn-login w-100 py-2 mt-2">LOGIN SEKARANG <i class="bi bi-arrow-right-circle ms-2"></i></button>
             </form>
-            
-            <?php
-            if(isset($_POST['login'])){
-                $nama = urlencode($_POST['nama_lengkap']);
-                $pass = $_POST['pass'];
-                
-                $res = api_request("GET", $url . "?nama_lengkap=eq." . $nama . "&password=eq." . $pass);
-                
-                if(!empty($res)){
-                    $_SESSION['user'] = $res[0];
-                    header("Location: dashboard.php");
-                } else {
-                    echo "<div class='alert alert-danger mt-4 mb-0 small text-center rounded-3 border-0 bg-danger text-white'><i class='bi bi-exclamation-triangle-fill me-2'></i>Nama atau Password Salah!</div>";
-                }
-            }
-            ?>
+
+            <?php if($error): ?>
+                <div class="alert alert-danger mt-4 mb-0 small text-center rounded-3 border-0">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i><?= $error ?>
+                </div>
+            <?php endif; ?>
+
             <div class="text-center mt-4">
                 <p class="text-muted small mb-0">Belum mendaftar?</p>
                 <a href="index.php" class="text-success text-decoration-none fw-bold">Daftar Santri Baru <i class="bi bi-arrow-right"></i></a>
